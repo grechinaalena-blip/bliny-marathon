@@ -667,6 +667,58 @@
                 margin-top: 12px;
             }
         }
+
+        /* Popup Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            height: 80%;
+            max-height: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .popup-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        .popup-close:hover {
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -884,7 +936,7 @@
                     </ul>
                     <div class="price">1 999 ₽</div>
                     <div class="price-note">&nbsp;</div>
-                    <a href="javascript:void(0);" class="btn-primary" onclick="window.gcLiteWidgets && window.gcLiteWidgets[1556307] && window.gcLiteWidgets[1556307].open(); return false;">Купить марафон</a>
+                    <a href="javascript:void(0);" class="btn-primary" onclick="openPopup('popup-marathon')">Купить марафон</a>
                 </div>
                 <div class="pricing-box popular">
                     <h3>Абонемент</h3>
@@ -897,7 +949,7 @@
                     </ul>
                     <div class="price">1 999 ₽/мес</div>
                     <div class="price-note">Отменить можно в любой момент</div>
-                    <a href="javascript:void(0);" class="btn-primary" onclick="window.gcLiteWidgets && window.gcLiteWidgets[1556297] && window.gcLiteWidgets[1556297].open(); return false;">Оформить абонемент</a>
+                    <a href="javascript:void(0);" class="btn-primary" onclick="openPopup('popup-subscription')">Оформить абонемент</a>
                 </div>
             </div>
         </div>
@@ -912,9 +964,37 @@
         </div>
     </section>
 
-    <!-- GetCourse Widgets -->
-    <script id="4c9e7d594f86f847ab83c0cb555addd5321db06b" src="https://club.schiborschi.online/pl/lite/widget/script?id=1556307"></script>
-    <script id="02243af604cea1a07a16a1248ee159e60aaf5294" src="https://club.schiborschi.online/pl/lite/widget/script?id=1556297"></script>
+    <!-- Popup Modals -->
+    <div id="popup-marathon" class="popup-overlay" onclick="closePopup('popup-marathon')">
+        <div class="popup-content" onclick="event.stopPropagation()">
+            <button class="popup-close" onclick="closePopup('popup-marathon')">&times;</button>
+            <iframe src="https://club.schiborschi.online/pl/lite/widget/widget?id=1556307" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div id="popup-subscription" class="popup-overlay" onclick="closePopup('popup-subscription')">
+        <div class="popup-content" onclick="event.stopPropagation()">
+            <button class="popup-close" onclick="closePopup('popup-subscription')">&times;</button>
+            <iframe src="https://club.schiborschi.online/pl/lite/widget/widget?id=1556297" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openPopup(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePopup(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.popup-overlay.active').forEach(p => p.classList.remove('active'));
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
 
 </body>
 </html>
