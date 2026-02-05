@@ -552,6 +552,13 @@
             font-weight: 700;
         }
 
+        .price-old {
+            font-size: 1.2rem;
+            color: #aaa;
+            text-decoration: line-through;
+            margin-bottom: 4px;
+        }
+
         .price {
             font-size: 2rem;
             font-weight: 700;
@@ -563,6 +570,45 @@
             font-size: 0.85rem;
             color: #888;
             margin-bottom: 24px;
+        }
+
+        .countdown-wrapper {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .countdown-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-item .number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-red);
+            background: var(--color-white);
+            padding: 12px 16px;
+            border-radius: 8px;
+            min-width: 60px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .countdown-item .label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 6px;
         }
 
         /* Footer CTA */
@@ -925,6 +971,29 @@
     <section class="pricing" id="pricing">
         <div class="container">
             <h2 class="section-title">Выбери свой формат</h2>
+            
+            <div class="countdown-wrapper">
+                <div class="countdown-label">Особые условия действуют:</div>
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <span class="number" id="days">00</span>
+                        <span class="label">дней</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="hours">00</span>
+                        <span class="label">часов</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="minutes">00</span>
+                        <span class="label">минут</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="seconds">00</span>
+                        <span class="label">секунд</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="pricing-grid">
                 <div class="pricing-box">
                     <h3>Марафон</h3>
@@ -934,6 +1003,7 @@
                         <li>Проверка фото-отчётов куратором</li>
                         <li>Доступ к материалам — 1 год</li>
                     </ul>
+                    <div class="price-old">3 500 ₽</div>
                     <div class="price">1 999 ₽</div>
                     <div class="price-note">&nbsp;</div>
                     <a href="javascript:void(0);" class="btn-primary" onclick="openPopup('popup-marathon')">Купить марафон</a>
@@ -947,6 +1017,7 @@
                         <li>Персональный разбор работ на платформе</li>
                         <li>Доступ — 1 месяц (с авто-продлением)</li>
                     </ul>
+                    <div class="price-old">2 990 ₽</div>
                     <div class="price">1 999 ₽/мес</div>
                     <div class="price-note">Отменить можно в любой момент</div>
                     <a href="javascript:void(0);" class="btn-primary" onclick="openPopup('popup-subscription')">Оформить абонемент</a>
@@ -994,6 +1065,32 @@
                 document.body.style.overflow = '';
             }
         });
+
+        // Countdown Timer - до 16 февраля 00:00 (конец 15 февраля)
+        const deadline = new Date('2026-02-16T00:00:00+03:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = deadline - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = '<p style="color: var(--color-red); font-weight: 600;">Время вышло!</p>';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
 
 </body>
