@@ -1102,7 +1102,7 @@
                     <div class="price-old">3 500 ₽</div>
                     <div class="price">1 999 ₽</div>
                     <div class="price-note">&nbsp;</div>
-                    <a href="javascript:void(0);" class="btn-primary" onclick="openPopup('popup-marathon')">Купить марафон</a>
+                    <a href="https://club.schiborschi.online/maslenica-marafon" target="_blank" class="btn-primary">Купить марафон</a>
                 </div>
                 <div class="pricing-box popular">
                     <h3>Абонемент</h3>
@@ -1116,7 +1116,7 @@
                     <div class="price-old">2 990 ₽</div>
                     <div class="price">1 999 ₽/мес</div>
                     <div class="price-note">Отменить можно в любой момент</div>
-                    <a href="javascript:void(0);" class="btn-primary" onclick="openPopup('popup-subscription')">Оформить абонемент</a>
+                    <a href="https://club.schiborschi.online/maslenica-marafon_abonement" target="_blank" class="btn-primary">Оформить абонемент</a>
                 </div>
             </div>
         </div>
@@ -1165,37 +1165,7 @@
         </div>
     </footer>
 
-    <!-- Popup Modals -->
-    <div id="popup-marathon" class="popup-overlay" onclick="closePopup('popup-marathon')">
-        <div class="popup-content" onclick="event.stopPropagation()">
-            <button class="popup-close" onclick="closePopup('popup-marathon')">&times;</button>
-            <iframe src="https://club.schiborschi.online/pl/lite/widget/widget?id=1556307" frameborder="0"></iframe>
-        </div>
-    </div>
-
-    <div id="popup-subscription" class="popup-overlay" onclick="closePopup('popup-subscription')">
-        <div class="popup-content" onclick="event.stopPropagation()">
-            <button class="popup-close" onclick="closePopup('popup-subscription')">&times;</button>
-            <iframe src="https://club.schiborschi.online/pl/lite/widget/widget?id=1556297" frameborder="0"></iframe>
-        </div>
-    </div>
-
     <script>
-        function openPopup(id) {
-            document.getElementById(id).classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closePopup(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.popup-overlay.active').forEach(p => p.classList.remove('active'));
-                document.body.style.overflow = '';
-            }
-        });
-
         // Countdown Timer - до 16 февраля 00:00 (конец 15 февраля)
         const deadline = new Date('2026-02-16T00:00:00+03:00').getTime();
 
