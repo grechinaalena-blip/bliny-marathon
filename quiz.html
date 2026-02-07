@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Какой вы тип домашнего кулинара? — ЩиБорщи</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-olive: #649436;
+            --color-olive-dark: #47422b;
+            --color-gray-light: #f5f5f5;
+            --color-white: #ffffff;
+            --color-red: #ff0901;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--color-olive-dark);
+        }
+
+        .quiz-container {
+            background: var(--color-white);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, var(--color-olive) 0%, #7ab342 100%);
+            color: white;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .quiz-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .quiz-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .quiz-content {
+            padding: 32px;
+        }
+
+        /* Intro Screen */
+        .intro-screen {
+            text-align: center;
+        }
+
+        .intro-screen h2 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            color: var(--color-olive-dark);
+        }
+
+        .intro-screen p {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .intro-screen .emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* Question Screen */
+        .question-screen {
+            display: none;
+        }
+
+        .question-screen.active {
+            display: block;
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--color-olive);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-olive-dark);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .option:hover {
+            border-color: var(--color-olive);
+            background: rgba(100, 148, 54, 0.05);
+        }
+
+        .option.selected {
+            border-color: var(--color-olive);
+            background: rgba(100, 148, 54, 0.1);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-screen.active {
+            display: block;
+        }
+
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .result-type {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-olive);
+            margin-bottom: 8px;
+        }
+
+        .result-barrier {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .result-description {
+            background: var(--color-gray-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .result-description h4 {
+            font-size: 0.9rem;
+            color: var(--color-olive);
+            margin-bottom: 12px;
+        }
+
+        .result-description ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .result-description li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .result-description li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-olive);
+            font-weight: 700;
+        }
+
+        .result-cta {
+            background: var(--color-olive);
+            padding: 24px;
+            border-radius: 16px;
+            color: white;
+        }
+
+        .result-cta h4 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .result-cta p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--color-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e00800;
+            transform: translateY(-2px);
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--color-olive-dark);
+        }
+
+        .btn-white:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-olive);
+            border: 2px solid var(--color-olive);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-olive);
+            color: white;
+        }
+
+        /* Footer */
+        .quiz-footer {
+            padding: 20px 32px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .quiz-footer a {
+            color: var(--color-olive);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 500px) {
+            .quiz-header {
+                padding: 24px;
+            }
+            
+            .quiz-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .quiz-content {
+                padding: 24px;
+            }
+
+            .question-text {
+                font-size: 1.05rem;
+            }
+
+            .option {
+                padding: 14px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="quiz-header">
+        <h1>Какой вы тип домашнего кулинара?</h1>
+        <p>10 вопросов • 2 минуты</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+    </div>
+
+    <div class="quiz-content">
+        <!-- Intro Screen -->
+        <div class="intro-screen" id="intro">
+            <div class="emoji">🍳</div>
+            <h2>Готовить дома — это не про талант</h2>
+            <p>Это про то, что именно вам мешает делать это легко и с удовольствием.<br><br>Пройдите короткий тест — и узнайте свой тип и что поможет именно вам.</p>
+            <button class="btn btn-primary" onclick="startQuiz()">Начать тест</button>
+        </div>
+
+        <!-- Questions -->
+        <div class="question-screen" id="q1">
+            <div class="question-number">Вопрос 1 из 10</div>
+            <div class="question-text">Как часто вы готовите дома?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(1, 'A')">Почти каждый день — это часть рутины</div>
+                <div class="option" onclick="selectOption(1, 'B')">Несколько раз в неделю, когда есть время</div>
+                <div class="option" onclick="selectOption(1, 'C')">По выходным или когда накрывает вдохновение</div>
+                <div class="option" onclick="selectOption(1, 'D')">Редко — чаще заказываю или ем что-то простое</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q2">
+            <div class="question-number">Вопрос 2 из 10</div>
+            <div class="question-text">Что вас больше всего напрягает в домашней готовке?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(2, 'A')">Придумать, что приготовить — голова пустая</div>
+                <div class="option" onclick="selectOption(2, 'B')">Сам процесс — долго, много посуды, устаю</div>
+                <div class="option" onclick="selectOption(2, 'C')">Закупки и планирование — вечно чего-то не хватает</div>
+                <div class="option" onclick="selectOption(2, 'D')">Результат не радует — получается "ну такое"</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q3">
+            <div class="question-number">Вопрос 3 из 10</div>
+            <div class="question-text">Когда вы открываете холодильник вечером, что происходит?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(3, 'A')">Смотрю и не понимаю, что из этого можно сделать</div>
+                <div class="option" onclick="selectOption(3, 'B')">Знаю что приготовить, но нет сил начинать</div>
+                <div class="option" onclick="selectOption(3, 'C')">Там пусто — забыла закупиться</div>
+                <div class="option" onclick="selectOption(3, 'D')">Готовлю что-то простое, но без удовольствия</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q4">
+            <div class="question-number">Вопрос 4 из 10</div>
+            <div class="question-text">Как вы обычно выбираете, что приготовить?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(4, 'A')">Ищу рецепты в интернете / листаю соцсети</div>
+                <div class="option" onclick="selectOption(4, 'B')">Готовлю одно и то же — проверенный набор блюд</div>
+                <div class="option" onclick="selectOption(4, 'C')">Спрашиваю семью — и обычно слышу "не знаю"</div>
+                <div class="option" onclick="selectOption(4, 'D')">Импровизирую из того, что есть</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q5">
+            <div class="question-number">Вопрос 5 из 10</div>
+            <div class="question-text">Что происходит, когда вы пробуете новый рецепт?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(5, 'A')">Часто получается не как на картинке — разочаровываюсь</div>
+                <div class="option" onclick="selectOption(5, 'B')">Не пробую — нет времени на эксперименты</div>
+                <div class="option" onclick="selectOption(5, 'C')">Пробую, но потом не повторяю — забываю или лень</div>
+                <div class="option" onclick="selectOption(5, 'D')">Обычно получается, но хочется разнообразия</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q6">
+            <div class="question-number">Вопрос 6 из 10</div>
+            <div class="question-text">Сколько времени вы реально можете выделить на готовку в будни?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(6, 'A')">15-20 минут максимум</div>
+                <div class="option" onclick="selectOption(6, 'B')">30-40 минут, если без отвлечений</div>
+                <div class="option" onclick="selectOption(6, 'C')">Час и больше — но не каждый день</div>
+                <div class="option" onclick="selectOption(6, 'D')">По-разному, никогда не знаю заранее</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q7">
+            <div class="question-number">Вопрос 7 из 10</div>
+            <div class="question-text">Как вы относитесь к планированию меню на неделю?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(7, 'A')">Пробовала — не работает, всё равно готовлю другое</div>
+                <div class="option" onclick="selectOption(7, 'B')">Хочу начать, но не знаю как подступиться</div>
+                <div class="option" onclick="selectOption(7, 'C')">Планирую, но это отнимает много сил</div>
+                <div class="option" onclick="selectOption(7, 'D')">Не планирую — живу "по ситуации"</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q8">
+            <div class="question-number">Вопрос 8 из 10</div>
+            <div class="question-text">Что вы чувствуете после того, как приготовили ужин?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(8, 'A')">Облегчение — наконец-то всё, можно отдохнуть</div>
+                <div class="option" onclick="selectOption(8, 'B')">Раздражение — опять куча посуды и времени потрачено</div>
+                <div class="option" onclick="selectOption(8, 'C')">Удовлетворение — когда получилось вкусно</div>
+                <div class="option" onclick="selectOption(8, 'D')">Ничего особенного — это просто рутина</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q9">
+            <div class="question-number">Вопрос 9 из 10</div>
+            <div class="question-text">Как реагирует семья на вашу готовку?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(9, 'A')">Едят, но без восторга — "нормально"</div>
+                <div class="option" onclick="selectOption(9, 'B')">Часто просят одно и то же — надоело повторять</div>
+                <div class="option" onclick="selectOption(9, 'C')">Хвалят, но мне самой не нравится результат</div>
+                <div class="option" onclick="selectOption(9, 'D')">У всех разные вкусы — угодить невозможно</div>
+            </div>
+        </div>
+
+        <div class="question-screen" id="q10">
+            <div class="question-number">Вопрос 10 из 10</div>
+            <div class="question-text">Что бы вы хотели изменить в своей домашней готовке?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(10, 'A')">Чтобы было быстрее и проще</div>
+                <div class="option" onclick="selectOption(10, 'B')">Чтобы было вкуснее и разнообразнее</div>
+                <div class="option" onclick="selectOption(10, 'C')">Чтобы не думать каждый день "что приготовить"</div>
+                <div class="option" onclick="selectOption(10, 'D')">Чтобы получать удовольствие, а не стресс</div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="result-screen" id="result-A">
+            <div class="result-emoji">💡</div>
+            <div class="result-type">Вечный поиск идей</div>
+            <div class="result-barrier">Ваш главный барьер: не хватает идей и вдохновения</div>
+            
+            <div class="result-description">
+                <h4>Что вам поможет:</h4>
+                <ul>
+                    <li>Готовые связки "продукт → что из него сделать"</li>
+                    <li>Короткие идеи без долгого поиска</li>
+                    <li>Понимание, как комбинировать то, что уже есть</li>
+                </ul>
+            </div>
+
+            <div class="result-cta">
+                <h4>Мини-курс "Как готовить дома вкуснее"</h4>
+                <p>7 дней в Telegram — научитесь смотреть на продукты по-новому</p>
+                <a href="https://sbsite.pro//e817b78ff28c9f3ae66c6688c58e872c_1?utm_source=from-test&utm_medium=type-ideas" class="btn btn-white" target="_blank">Начать бесплатно →</a>
+            </div>
+        </div>
+
+        <div class="result-screen" id="result-B">
+            <div class="result-emoji">⚡</div>
+            <div class="result-type">Нет сил и времени</div>
+            <div class="result-barrier">Ваш главный барьер: усталость и нехватка времени</div>
+            
+            <div class="result-description">
+                <h4>Что вам поможет:</h4>
+                <ul>
+                    <li>Рецепты на 15-20 минут из простых продуктов</li>
+                    <li>Лайфхаки, как сократить время на кухне</li>
+                    <li>Понимание, что "вкусно" не значит "сложно"</li>
+                </ul>
+            </div>
+
+            <div class="result-cta">
+                <h4>Мини-курс "Как готовить дома вкуснее"</h4>
+                <p>7 дней в Telegram — готовьте вкусно даже когда сил ноль</p>
+                <a href="https://sbsite.pro//e817b78ff28c9f3ae66c6688c58e872c_1?utm_source=from-test&utm_medium=type-time" class="btn btn-white" target="_blank">Начать бесплатно →</a>
+            </div>
+        </div>
+
+        <div class="result-screen" id="result-C">
+            <div class="result-emoji">🗂</div>
+            <div class="result-type">Хаос в системе</div>
+            <div class="result-barrier">Ваш главный барьер: нет системы в закупках и планировании</div>
+            
+            <div class="result-description">
+                <h4>Что вам поможет:</h4>
+                <ul>
+                    <li>Простые принципы, как держать холодильник готовым</li>
+                    <li>Понимание, какие продукты всегда выручают</li>
+                    <li>Минимальное планирование, которое реально работает</li>
+                </ul>
+            </div>
+
+            <div class="result-cta">
+                <h4>Мини-курс "Как готовить дома вкуснее"</h4>
+                <p>7 дней в Telegram — наведите порядок в голове и на кухне</p>
+                <a href="https://sbsite.pro//e817b78ff28c9f3ae66c6688c58e872c_1?utm_source=from-test&utm_medium=type-system" class="btn btn-white" target="_blank">Начать бесплатно →</a>
+            </div>
+        </div>
+
+        <div class="result-screen" id="result-D">
+            <div class="result-emoji">✨</div>
+            <div class="result-type">Хочу вкуснее</div>
+            <div class="result-barrier">Ваш главный барьер: результат не радует, хочется лучше</div>
+            
+            <div class="result-description">
+                <h4>Что вам поможет:</h4>
+                <ul>
+                    <li>Понимание, что делает блюдо вкусным (не ингредиенты, а техника)</li>
+                    <li>Простые приёмы, которые меняют вкус</li>
+                    <li>Уверенность, что вы всё делаете правильно</li>
+                </ul>
+            </div>
+
+            <div class="result-cta">
+                <h4>Мини-курс "Как готовить дома вкуснее"</h4>
+                <p>7 дней в Telegram — превратите "обычную еду" во вкусную</p>
+                <a href="https://sbsite.pro//e817b78ff28c9f3ae66c6688c58e872c_1?utm_source=from-test&utm_medium=type-taste" class="btn btn-white" target="_blank">Начать бесплатно →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-footer">
+        <a href="https://www.schiborschi.online" target="_blank">ЩиБорщи — школа кулинарных навыков</a>
+    </div>
+</div>
+
+<script>
+    const answers = { A: 0, B: 0, C: 0, D: 0 };
+    const totalQuestions = 10;
+    let currentQuestion = 0;
+
+    function startQuiz() {
+        document.getElementById('intro').style.display = 'none';
+        document.getElementById('q1').classList.add('active');
+        currentQuestion = 1;
+        updateProgress();
+    }
+
+    function selectOption(questionNum, answer) {
+        // Mark selected
+        const options = document.querySelectorAll(`#q${questionNum} .option`);
+        options.forEach(opt => opt.classList.remove('selected'));
+        event.target.classList.add('selected');
+
+        // Count answer
+        answers[answer]++;
+
+        // Delay before next question
+        setTimeout(() => {
+            document.getElementById(`q${questionNum}`).classList.remove('active');
+
+            if (questionNum < totalQuestions) {
+                document.getElementById(`q${questionNum + 1}`).classList.add('active');
+                currentQuestion = questionNum + 1;
+                updateProgress();
+            } else {
+                showResult();
+            }
+        }, 300);
+    }
+
+    function updateProgress() {
+        const progress = (currentQuestion / totalQuestions) * 100;
+        document.getElementById('progress').style.width = progress + '%';
+    }
+
+    function showResult() {
+        // Find dominant type
+        let maxType = 'A';
+        let maxCount = answers.A;
+
+        for (let type in answers) {
+            if (answers[type] > maxCount) {
+                maxCount = answers[type];
+                maxType = type;
+            }
+        }
+
+        // Show result
+        document.getElementById('progress').style.width = '100%';
+        document.getElementById(`result-${maxType}`).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
